@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>ממיר כתב סתרים</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      direction: rtl;
+      background-color: #f4f4f4;
+    }
+    textarea, select, button {
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    pre#output {
+      white-space: pre-wrap;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    button.copy {
+      margin-top: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>ממיר כתב סתרים</h2>
+
+  <label for="input">טקסט לעיבוד:</label>
+  <textarea id="input" rows="5" placeholder="הכנס טקסט בעברית..."></textarea>
+
+  <label for="mode">בחר מצב המרה:</label>
+  <select id="mode">
+    <option value="emoji">אימוג׳ים</option>
+    <option value="ancient">עברית קדומה</option>
+  </select>
+
+  <button id="convertBtn">המר</button>
+  <button class="copy" onclick="copyToClipboard()">העתק תוצאה</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    const emojiMap = {
+      'א': '🍎','ב': '🍌','ג': '🍇','ד': '🐬','ה': '🐘','ו': '🌊','ז': '🐍',
+      'ח': '🐢','ט': '🐯','י': '🦔','כ': '🐨','ך': '🐨','ל': '🐞','מ': '🐵','ם': '🐵',
+      'נ': '🐙','ן': '🐙','ס': '🐧','ע': '🐪','פ': '🦊','ף': '🦊','צ': '🌵','ץ': '🌵',
+      'ק': '🐓','ר': '🐺','ש': '🦄','ת': '🦖'
+    };
+
+    const ancientMap = {
+      'א': '𐤀','ב': '𐤁','ג': '𐤂','ד': '𐤃','ה': '𐤄','ו': '𐤅','ז': '𐤆',
+      'ח': '𐤇','ט': '𐤈','י': '𐤉','כ': '𐤊','ך': '𐤊','ל': '𐤋','מ': '𐤌','ם': '𐤌',
+      'נ': '𐤍','ן': '𐤍','ס': '𐤎','ע': '𐤏','פ': '𐤐','ף': '𐤐','צ': '𐤑','ץ': '𐤑',
+      'ק': '𐤒','ר': '𐤓','ש': '𐤔','ת': '𐤕'
+    };
+
+    function convertText(text, map) {
+      return [...text].map(char => map[char] || char).join('');
+    }
+
+    document.getElementById("convertBtn").addEventListener("click", () => {
+      const text = document.getElementById('input').value;
+      const mode = document.getElementById('mode').value;
+      const map = mode === 'emoji' ? emojiMap : ancientMap;
+      document.getElementById('output').textContent = convertText(text, map);
+    });
+
+    function copyToClipboard() {
+      const output = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(output)
+        .then(() => alert("הטקסט הועתק ללוח"))
+        .catch(() => alert("אירעה שגיאה בהעתקה"));
+    }
+  </script>
+</body>
+</html>
