@@ -4,69 +4,214 @@
   <meta charset="UTF-8" />
   <title>ממיר כתב סתרים</title>
   <style>
+    :root {
+      --bg-light: #f5f5f5;
+      --bg-dark: #1e1e1e;
+      --text-light: #000;
+      --text-dark: #f0f0f0;
+      --primary: #4a90e2;
+      --border: #ccc;
+      --button-hover: #357ABD;
+      --success-bg: #4caf50;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-      direction: rtl;
-      background-color: #f4f4f4;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
     }
-    textarea, select, button {
+
+    textarea, select {
       width: 100%;
       font-size: 16px;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
       margin-top: 10px;
+      transition: background-color 0.3s, color 0.3s;
     }
-    pre#output {
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .row > * {
+      flex: 1;
+      min-width: 130px;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 34px;
+      transition: 0.4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+
+    .toggle-switch input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    .toggle-switch input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    pre {
       white-space: pre-wrap;
       background: #fff;
       padding: 10px;
-      border: 1px solid #ccc;
-      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-top: 15px;
       font-size: 18px;
-      min-height: 50px;
+      transition: background-color 0.3s, color 0.3s;
     }
-    .image-container {
+
+    .dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .dark-mode textarea,
+    .dark-mode select,
+    .dark-mode pre {
+      background-color: #2a2a2a;
+      color: var(--text-dark);
+      border-color: #444;
+    }
+
+    .footer {
       margin-top: 30px;
+      font-size: 14px;
       text-align: center;
+      color: gray;
     }
-    .image-container img {
-      width: 80%; /* שלוט כאן בגודל */
-      max-width: 500px;
-      height: auto;
-      border: 1px solid #ccc;
-    }
-    #copyBtn {
-      margin-top: 10px;
-      background-color: #007bff;
+
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--success-bg);
       color: white;
-      border: none;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: 5px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 9999;
     }
-    #copyBtn:hover {
-      background-color: #0056b3;
+
+    .popup.show {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
   <h2>ממיר כתב סתרים</h2>
-  
-  <textarea id="input" rows="5" placeholder="הכנס טקסט בעברית..."></textarea>
-  
-  <select id="mode">
-    <option value="emoji">אימוג׳ים</option>
-    <option value="ancient">עברית קדומה</option>
-  </select>
-  
-  <button id="convertBtn">המר</button>
+
+  <textarea id="input" rows="4" placeholder="הקלד טקסט בעברית..."></textarea>
+
+  <div class="row">
+    <select id="mode">
+      <option value="emoji">אימוג׳ים</option>
+      <option value="ancient" selected>עברית קדומה</option>
+    </select>
+
+    <select id="fontSelect">
+      <option value="Arial">Arial</option>
+      <option value="Courier New">Courier New</option>
+      <option value="Tahoma">Tahoma</option>
+      <option value="Verdana">Verdana</option>
+    </select>
+
+    <select id="fontSize">
+      <option value="14">14px</option>
+      <option value="16">16px</option>
+      <option value="18" selected>18px</option>
+      <option value="20">20px</option>
+      <option value="22">22px</option>
+      <option value="24">24px</option>
+    </select>
+
+    <label>מודגש:
+      <label class="toggle-switch">
+        <input type="checkbox" id="boldToggle">
+        <span class="slider"></span>
+      </label>
+    </label>
+
+    <button id="copyBtn">📋 העתק תוצאה</button>
+    <button id="copyLegend">📜 העתק פירוש</button>
+  </div>
+
+  <div class="row" style="margin-top: 15px;">
+    <label>🌙 מצב כהה:
+      <label class="toggle-switch">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+      </label>
+    </label>
+  </div>
 
   <pre id="output"></pre>
-  <button id="copyBtn">📋 העתק תוצאה</button>
 
-  <div class="image-container">
-    <h3>פירוש האותיות:</h3>
-    <img src="images/chart.png" alt="טבלת פירוש האותיות">
+  <h3>פירוש האותיות:</h3>
+  <pre id="legend"></pre>
+
+  <div class="footer">
+    &copy; כל הזכויות שמורות למוליקן. עודכן לאחרונה: <span id="date"></span>
   </div>
+
+  <div class="popup" id="popup">✔️ הועתק ללוח</div>
 
   <script>
     const emojiMap = {
@@ -75,6 +220,7 @@
       'נ': '🐙','ן': '🐙','ס': '🐧','ע': '🐪','פ': '🦊','ף': '🦊','צ': '🌵','ץ': '🌵',
       'ק': '🐓','ר': '🐺','ש': '🦄','ת': '🦖'
     };
+
     const ancientMap = {
       'א': '𐤀','ב': '𐤁','ג': '𐤂','ד': '𐤃','ה': '𐤄','ו': '𐤅','ז': '𐤆',
       'ח': '𐤇','ט': '𐤈','י': '𐤉','כ': '𐤊','ך': '𐤊','ל': '𐤋','מ': '𐤌','ם': '𐤌',
@@ -82,32 +228,89 @@
       'ק': '𐤒','ר': '𐤓','ש': '𐤔','ת': '𐤕'
     };
 
-    document.getElementById("convertBtn").addEventListener("click", () => {
-      const text = document.getElementById('input').value;
-      const mode = document.getElementById('mode').value;
-      let output = '';
+    const legendOrder = [
+      'א','ב','ג','ד','ה','ו','ז','ח','ט','י','כ','ך','ל','מ','ם',
+      'נ','ן','ס','ע','פ','ף','צ','ץ','ק','ר','ש','ת'
+    ];
 
-      for (let char of text) {
-        if (mode === 'emoji') {
-          output += emojiMap[char] || char;
-        } else if (mode === 'ancient') {
-          output += ancientMap[char] || char;
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const legend = document.getElementById('legend');
+    const fontSelect = document.getElementById('fontSelect');
+    const fontSize = document.getElementById('fontSize');
+    const boldToggle = document.getElementById('boldToggle');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyLegend = document.getElementById('copyLegend');
+    const darkToggle = document.getElementById('darkToggle');
+    const mode = document.getElementById('mode');
+    const popup = document.getElementById('popup');
+
+    function convertText() {
+      const text = input.value;
+      const map = (mode.value === 'emoji') ? emojiMap : ancientMap;
+      let result = "";
+      for (let c of text) result += map[c] || c;
+      output.textContent = result;
+      updateLegend();
+      applyStyles();
+    }
+
+    function updateLegend() {
+      const map = ancientMap;
+      let line = '', count = 0;
+      legend.textContent = '';
+      for (let letter of legendOrder) {
+        line += `${letter} = ${map[letter] || ''}        `;
+        count++;
+        if (count % 4 === 0) {
+          legend.textContent += line + '\n';
+          line = '';
         }
       }
+      if (line) legend.textContent += line;
+    }
 
-      document.getElementById('output').textContent = output;
+    function applyStyles() {
+      const font = fontSelect.value;
+      const size = fontSize.value + 'px';
+      const bold = boldToggle.checked ? 'bold' : 'normal';
+      output.style.fontFamily = font;
+      legend.style.fontFamily = font;
+      output.style.fontSize = size;
+      legend.style.fontSize = size;
+      output.style.fontWeight = bold;
+      legend.style.fontWeight = bold;
+    }
+
+    function showPopup(msg) {
+      popup.textContent = msg;
+      popup.classList.add("show");
+      setTimeout(() => popup.classList.remove("show"), 2500);
+    }
+
+    input.addEventListener("input", convertText);
+    fontSelect.addEventListener("change", applyStyles);
+    fontSize.addEventListener("change", applyStyles);
+    boldToggle.addEventListener("change", applyStyles);
+    mode.addEventListener("change", convertText);
+
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(output.textContent);
+      showPopup("✔️ הפלט הועתק ללוח");
     });
 
-    document.getElementById("copyBtn").addEventListener("click", () => {
-      const outputText = document.getElementById("output").textContent;
-      navigator.clipboard.writeText(outputText).then(() => {
-        alert("הטקסט הועתק בהצלחה!");
-      }).catch(() => {
-        alert("שגיאה בהעתקה");
-      });
+    copyLegend.addEventListener("click", () => {
+      navigator.clipboard.writeText(legend.textContent);
+      showPopup("✔️ הפירוש הועתק ללוח");
     });
+
+    darkToggle.addEventListener("change", () => {
+      document.body.classList.toggle("dark-mode");
+    });
+
+    document.getElementById("date").textContent = new Date().toLocaleDateString();
+
+    convertText();
   </script>
 </body>
-</html>
-  <p> האתר עודכן לאחרונה בתאריך: 5 ביוני 2025</p>
 </html>

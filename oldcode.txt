@@ -1,0 +1,115 @@
+05-05-25
+<!-- <!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>ממיר כתב סתרים</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      direction: rtl;
+      background-color: #f4f4f4;
+    }
+    textarea, select, button {
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    pre#output {
+      white-space: pre-wrap;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      font-size: 18px;
+      min-height: 50px;
+    }
+    .image-container {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .image-container img {
+      width: 80%; /* שלוט כאן בגודל */
+      max-width: 500px;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+    #copyBtn {
+      margin-top: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #copyBtn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>ממיר כתב סתרים</h2>
+  
+  <textarea id="input" rows="5" placeholder="הכנס טקסט בעברית..."></textarea>
+  
+  <select id="mode">
+    <option value="emoji">אימוג׳ים</option>
+    <option value="ancient">עברית קדומה</option>
+  </select>
+  
+  <button id="convertBtn">המר</button>
+
+  <pre id="output"></pre>
+  <button id="copyBtn">📋 העתק תוצאה</button>
+
+  <div class="image-container">
+    <h3>פירוש האותיות:</h3>
+    <img src="images/chart.png" alt="טבלת פירוש האותיות">
+  </div>
+
+  <script>
+    const emojiMap = {
+      'א': '🍎','ב': '🍌','ג': '🍇','ד': '🐬','ה': '🐘','ו': '🌊','ז': '🐍',
+      'ח': '🐢','ט': '🐯','י': '🦔','כ': '🐨','ך': '🐨','ל': '🐞','מ': '🐵','ם': '🐵',
+      'נ': '🐙','ן': '🐙','ס': '🐧','ע': '🐪','פ': '🦊','ף': '🦊','צ': '🌵','ץ': '🌵',
+      'ק': '🐓','ר': '🐺','ש': '🦄','ת': '🦖'
+    };
+    const ancientMap = {
+      'א': '𐤀','ב': '𐤁','ג': '𐤂','ד': '𐤃','ה': '𐤄','ו': '𐤅','ז': '𐤆',
+      'ח': '𐤇','ט': '𐤈','י': '𐤉','כ': '𐤊','ך': '𐤊','ל': '𐤋','מ': '𐤌','ם': '𐤌',
+      'נ': '𐤍','ן': '𐤍','ס': '𐤎','ע': '𐤏','פ': '𐤐','ף': '𐤐','צ': '𐤑','ץ': '𐤑',
+      'ק': '𐤒','ר': '𐤓','ש': '𐤔','ת': '𐤕'
+    };
+
+    document.getElementById("convertBtn").addEventListener("click", () => {
+      const text = document.getElementById('input').value;
+      const mode = document.getElementById('mode').value;
+      let output = '';
+
+      for (let char of text) {
+        if (mode === 'emoji') {
+          output += emojiMap[char] || char;
+        } else if (mode === 'ancient') {
+          output += ancientMap[char] || char;
+        }
+      }
+
+      document.getElementById('output').textContent = output;
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      const outputText = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(outputText).then(() => {
+        alert("הטקסט הועתק בהצלחה!");
+      }).catch(() => {
+        alert("שגיאה בהעתקה");
+      });
+    });
+  </script>
+</body>
+</html>
+  <p> האתר עודכן לאחרונה בתאריך: 5 ביוני 2025</p>
+</html>
+ֱ -->
